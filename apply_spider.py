@@ -12,9 +12,9 @@ class SCBSpider(object):
         # 点击登录
         self.browser.find_element_by_xpath('/html/body/header/div[1]/div/div/div[2]/div/div/div/a[2]').click()
         # 用户名
-        self.browser.find_element_by_id('lgp_mobile').send_keys('13836553687')
+        self.browser.find_element_by_id('lgp_mobile').send_keys('账号')
         # 密码
-        self.browser.find_element_by_id('lgp_password').send_keys('100428Yp')
+        self.browser.find_element_by_id('lgp_password').send_keys('密码')
         # 登录按钮
         self.browser.find_element_by_xpath('//*[@id="lgp_btn_login"]').click()
         time.sleep(2)
