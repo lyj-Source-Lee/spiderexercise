@@ -21,8 +21,11 @@ class SCBSpider(object):
         # 点击头像进入个人
         self.browser.find_element_by_xpath('/html/body/header/div[1]/div/div/div[2]/div/div/div/div/a/img').click()
         time.sleep(1)
-        # 点击我的申请
-        self.browser.find_element_by_xpath('/html/body/main/div[2]/div/div[1]/div/ul[1]/li[3]/a').click()
+        # 点击合作管理
+        self.browser.find_element_by_xpath('/html/body/main/div[2]/div/div[1]/div/ul[1]/li[4]/a').click()
+        time.sleep(1)
+        # 点击我申请的合作
+        self.browser.find_element_by_xpath('/html/body/main/div[2]/div/div[2]/div[1]/a[2]').click()
         time.sleep(1)
 
     # 解析一级界面信息
@@ -33,17 +36,20 @@ class SCBSpider(object):
             # print(tl)
             info = tl.text.split('\n')
             # print(info)
-            for i in info:
+            for i,n in enumerate(info):
                 # 取倒数第三个字
                 # print(i)
-                # print(i[-3])
-                if i[-3] == '已':
-                    xp = '//tr[{}]/td[2]/a'.format(i+1)
-                    tl.find_element_by_xpath(xp).click()
+                # print(n)
+                # print(n[-3])
+                if n[-3] == '已':
+                    xp = '// *[ @ id = "company_list_data"] /tr[{}]/td[2]/a'.format(i+1)
+                    # print(xp)
+                    self.browser.find_element_by_xpath(xp).click()
                     time.sleep(1)
                     self.two_page()
                     self.browser.back()
                     time.sleep(1)
+
 
     # 解析二级界面信息
     def two_page(self):
@@ -66,6 +72,7 @@ class SCBSpider(object):
 if __name__ == '__main__':
     spider = SCBSpider()
     spider.main()
+
 
 
 
