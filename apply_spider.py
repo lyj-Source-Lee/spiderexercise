@@ -5,6 +5,7 @@ class SCBSpider(object):
     def __init__(self):
         self.browser = webdriver.Chrome()
         self.url = 'http://www.shichangbu.com'
+        self.i = 1
 
     # 登录
     def page_log(self):
@@ -12,9 +13,9 @@ class SCBSpider(object):
         # 点击登录
         self.browser.find_element_by_xpath('/html/body/header/div[1]/div/div/div[2]/div/div/div/a[2]').click()
         # 用户名
-        self.browser.find_element_by_id('lgp_mobile').send_keys('账号')
+        self.browser.find_element_by_id('lgp_mobile').send_keys('13836553687')
         # 密码
-        self.browser.find_element_by_id('lgp_password').send_keys('密码')
+        self.browser.find_element_by_id('lgp_password').send_keys('100428Yp')
         # 登录按钮
         self.browser.find_element_by_xpath('//*[@id="lgp_btn_login"]').click()
         time.sleep(2)
@@ -31,24 +32,25 @@ class SCBSpider(object):
     # 解析一级界面信息
     def one_page(self):
         tr_list = self.browser.find_elements_by_xpath('//*[@id="company_list_data"]')
-        for tl in tr_list:
-            # 返回一个列表，text化后分割后得到一个列表
-            # print(tl)
-            info = tl.text.split('\n')
-            # print(info)
-            for i,n in enumerate(info):
-                # 取倒数第三个字
-                # print(i)
-                # print(n)
-                # print(n[-3])
-                if n[-3] == '已':
-                    xp = '// *[ @ id = "company_list_data"] /tr[{}]/td[2]/a'.format(i+1)
-                    # print(xp)
-                    self.browser.find_element_by_xpath(xp).click()
-                    time.sleep(1)
-                    self.two_page()
-                    self.browser.back()
-                    time.sleep(1)
+        # print(len(tr_list[0].text.split('\n')))
+        time.sleep(0.5)
+        for i in range(len(tr_list[0].text.split('\n'))):
+            # print(i)
+            time.sleep(0.5)
+            xp = '//*[@id="company_list_data"]/tr[{}]/td[4]'.format(i+1)
+            # print(xp)
+            time.sleep(0.5)
+            if self.browser.find_element_by_xpath(xp).text.split('\n')[0] == '已通过':
+                xp1 = '// *[ @ id = "company_list_data"] /tr[{}]/td[2]/a'.format(i+1)
+                self.browser.find_element_by_xpath(xp1).click()
+                time.sleep(1)
+                self.two_page()
+                self.browser.back()
+                time.sleep(1)
+                if self.i > 1:
+                    for nu in range(self.i):
+                        self.browser.find_element_by_class_name('layui-laypage-next').click()
+                        time.sleep(1)
 
 
     # 解析二级界面信息
@@ -65,6 +67,7 @@ class SCBSpider(object):
             self.one_page()
             if self.browser.page_source.find('layui-laypage-next layui-disabled') == -1:
                 self.browser.find_element_by_class_name('layui-laypage-next').click()
+                self.i += 1
             else:
                 x = False
 
@@ -72,7 +75,6 @@ class SCBSpider(object):
 if __name__ == '__main__':
     spider = SCBSpider()
     spider.main()
-
 
 
 
